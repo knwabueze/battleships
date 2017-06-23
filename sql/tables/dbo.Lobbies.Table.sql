@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  Table [dbo].[Lobbies]    Script Date: 6/22/2017 3:03:13 PM ******/
+/****** Object:  Table [dbo].[Lobbies]    Script Date: 6/23/2017 8:48:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20,13 +20,13 @@ CREATE TABLE [dbo].[Lobbies](
 ) ON [PRIMARY]
 
 GO
-ALTER TABLE [dbo].[Lobbies]  WITH CHECK ADD  CONSTRAINT [FK_Lobbies_Users] FOREIGN KEY([HostId])
+ALTER TABLE [dbo].[Lobbies]  WITH CHECK ADD  CONSTRAINT [FK_Lobbies_Users3] FOREIGN KEY([HostId])
 REFERENCES [dbo].[Users] ([UserId])
 GO
-ALTER TABLE [dbo].[Lobbies] CHECK CONSTRAINT [FK_Lobbies_Users]
+ALTER TABLE [dbo].[Lobbies] CHECK CONSTRAINT [FK_Lobbies_Users3]
 GO
-ALTER TABLE [dbo].[Lobbies]  WITH CHECK ADD  CONSTRAINT [FK_Lobbies_Users1] FOREIGN KEY([JoinId])
+ALTER TABLE [dbo].[Lobbies]  WITH CHECK ADD  CONSTRAINT [FK_Lobbies_Users4] FOREIGN KEY([JoinId])
 REFERENCES [dbo].[Users] ([UserId])
 GO
-ALTER TABLE [dbo].[Lobbies] CHECK CONSTRAINT [FK_Lobbies_Users1]
+ALTER TABLE [dbo].[Lobbies] CHECK CONSTRAINT [FK_Lobbies_Users4]
 GO
