@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_CreateUser]    Script Date: 6/23/2017 9:52:11 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_CreateUser]    Script Date: 6/24/2017 4:32:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12,6 +12,7 @@ INSERT INTO		Users
 VALUES			(@username)
 
 SELECT			UserId
+,				Username
 FROM			Users
 WHERE			UserId = SCOPE_IDENTITY()
 END
