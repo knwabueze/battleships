@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  Table [dbo].[Lobbies]    Script Date: 6/23/2017 8:48:36 AM ******/
+/****** Object:  Table [dbo].[Lobbies]    Script Date: 6/24/2017 4:32:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11,8 +11,7 @@ CREATE TABLE [dbo].[Lobbies](
 	[CreationDate] [datetime] NOT NULL,
 	[HostId] [int] NOT NULL,
 	[JoinId] [int] NULL,
-	[HostReady] [bit] NOT NULL,
-	[JoinReady] [bit] NULL,
+	[Status] [bit] NOT NULL,
  CONSTRAINT [PK_Lobbies] PRIMARY KEY CLUSTERED 
 (
 	[LobbyId] ASC
