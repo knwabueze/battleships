@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_InitializeGame]    Script Date: 6/24/2017 4:32:41 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_InitializeGame]    Script Date: 6/26/2017 3:05:55 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -27,6 +27,8 @@ IF  @Status = 1
 	INSERT		Games
 	VALUES		(@HostId, @JoinId, 0, 100, 100)	
 
+	SELECT 0
+
 	END
 ELSE
 	BEGIN
@@ -36,5 +38,6 @@ ELSE
 	END
 
 END
+
 
 GO
