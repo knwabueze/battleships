@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_PlaceShip]    Script Date: 6/27/2017 12:06:11 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_PlaceShip]    Script Date: 6/27/2017 1:27:18 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -27,9 +27,14 @@ BEGIN
 	DECLARE		@numOfShipOfType	int;
 
 	SELECT		@numOfShipOfType = COUNT(*) 
-	FROM		vw_OccupiedCells
-	WHERE		PlayerId	= @userid
-	AND			GameId		= @gameid
+	FROM		vw_OccupiedCells	oc 
+	,			ShipTypesLookup		stl
+	,			Ships				s
+	WHERE		s.ShipId	= oc.ShipId
+	AND			stl.TypeId	= s.TypeId
+	AND			oc.PlayerId	= @userid
+	AND			s.GameId	= @gameid
+	AND			stl.TypeId	= @typeid
 
 	IF (@numOfShipOfType < 1)
 	BEGIN
@@ -37,16 +42,26 @@ BEGIN
 		BEGIN
 			INSERT		Ships
 			VALUES		(@typeid, @userid, @gameid, @x, @y, @o)
+
+			SELECT		X	AS X
+			,			Y	AS Y
+			,			0   AS ErrorCode
+			FROM		fn_CalculateShipCells(@x, @y, @s, @o)
 		END
 		ELSE
 		BEGIN
-			SELECT -1
+			SELECT		NULL	AS X
+			,			NULL	AS Y
+			,			-1		AS ErrorCode
 		END
 	END
 	ELSE
 	BEGIN
-		SELECT -1
+		SELECT		NULL	AS X
+		,			NULL	AS Y
+		,			-1		AS ErrorCode
 	END
 END
+
 
 GO

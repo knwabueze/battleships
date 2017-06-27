@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  Table [dbo].[Games]    Script Date: 6/27/2017 12:06:11 AM ******/
+/****** Object:  Table [dbo].[Games]    Script Date: 6/27/2017 1:27:18 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12,12 +12,18 @@ CREATE TABLE [dbo].[Games](
 	[CurrentTurn] [bit] NOT NULL,
 	[Width] [int] NOT NULL,
 	[Height] [int] NOT NULL,
+	[LastShotId] [int] NULL,
  CONSTRAINT [PK_Games] PRIMARY KEY CLUSTERED 
 (
 	[GameId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
+GO
+ALTER TABLE [dbo].[Games]  WITH CHECK ADD  CONSTRAINT [FK_Games_HitCells] FOREIGN KEY([LastShotId])
+REFERENCES [dbo].[HitCells] ([HitCellId])
+GO
+ALTER TABLE [dbo].[Games] CHECK CONSTRAINT [FK_Games_HitCells]
 GO
 ALTER TABLE [dbo].[Games]  WITH CHECK ADD  CONSTRAINT [FK_Games_Users3] FOREIGN KEY([HostId])
 REFERENCES [dbo].[Users] ([UserId])

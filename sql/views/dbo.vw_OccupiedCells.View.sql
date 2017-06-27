@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  View [dbo].[vw_OccupiedCells]    Script Date: 6/27/2017 12:06:11 AM ******/
+/****** Object:  View [dbo].[vw_OccupiedCells]    Script Date: 6/27/2017 1:31:13 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

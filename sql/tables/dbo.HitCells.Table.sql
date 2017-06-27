@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  Table [dbo].[HitCells]    Script Date: 6/27/2017 12:06:11 AM ******/
+/****** Object:  Table [dbo].[HitCells]    Script Date: 6/27/2017 1:27:18 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9,7 +9,12 @@ CREATE TABLE [dbo].[HitCells](
 	[X] [int] NOT NULL,
 	[Y] [int] NOT NULL,
 	[GameId] [int] NOT NULL,
-	[PlayerId] [int] NOT NULL
+	[PlayerId] [int] NOT NULL,
+	[HitCellId] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_HitCells] PRIMARY KEY CLUSTERED 
+(
+	[HitCellId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
