@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  UserDefinedFunction [dbo].[fn_CalculateShipCells]    Script Date: 6/26/2017 3:05:55 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[fn_CalculateShipCells]    Script Date: 6/27/2017 12:06:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18,7 +18,7 @@ RETURNS @result TABLE
 	Y	int
 )
 AS
-	BEGIN
+BEGIN
 	DECLARE		@counter	int = 0;
 	DECLARE		@isValid	bit	= 1;
 
@@ -29,57 +29,32 @@ AS
 								WHEN @o = 'W' THEN	1
 								ELSE 0 END
 
-
-	WHILE		@counter < @s
+	WHILE	@counter < @s
+	BEGIN
+		IF (@o = 'N' OR @o = 'S')
 		BEGIN
-		IF @o = 'N' OR @o = 'S'
-			BEGIN
-				IF EXISTS (
-					SELECT * FROM Ships
-					WHERE	Y = @y + (@orientationNum * @counter)
-					AND		X = @x
-					) SET @isValid = 0;
-
-				ELSE
-					BEGIN
-
-						IF (@y + ( @orientationNum * @counter ) > 10 ) OR ( @y + ( @orientationNum * @counter ) < 1 )
-							SET @isValid = 0;
-
-						INSERT		@result
-						VALUES		(@x, @y + (@orientationNum * @counter))
-					END
-			END
-		ELSE
-			BEGIN
-			IF EXISTS (
-				SELECT * FROM Ships
-				WHERE	Y = @y
-				AND		X = @x + (@orientationNum * @counter)
-				) SET @isValid = 0;
-
-			ELSE
-				BEGIN
-
-					IF (@x + ( @orientationNum * @counter ) > 10 ) OR ( @x + ( @orientationNum * @counter ) < 1 )
-						SET @isValid = 0;
-
-					INSERT		@result
-					VALUES		(@x + (@orientationNum * @counter), @y)
-				END				
-			END
-
-		SET @counter = @counter + 1;
-
-		--IF @isValid = 0 
-		--	BEGIN
-		--		DELETE @result
-		--		RETURN
-		--	END
-
+			IF (@y + ( @orientationNum * @counter ) > 10 ) OR ( @y + ( @orientationNum * @counter ) < 1 )
+				SET @isValid = 0;
+			INSERT		@result
+			VALUES		(@x, @y + (@orientationNum * @counter))
 		END
-		
+		ELSE IF (@o = 'W' OR @o = 'E')
+		BEGIN
+			IF (@x + ( @orientationNum * @counter ) > 10 ) OR ( @x + ( @orientationNum * @counter ) < 1 )
+				SET @isValid = 0;
+
+			INSERT		@result
+			VALUES		(@x + (@orientationNum * @counter), @y)
+		END
+	SET @counter = @counter + 1;
+	IF @isValid = 0 
+	BEGIN
+		DELETE @result
 		RETURN
 	END
+	END
+	RETURN
+END
+
 
 GO
