@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  Table [dbo].[HitCells]    Script Date: 6/27/2017 1:27:18 PM ******/
+/****** Object:  Table [dbo].[HitCells]    Script Date: 6/27/2017 9:49:37 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

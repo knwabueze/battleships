@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_PlaceShot]    Script Date: 6/27/2017 1:27:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_PlaceShot]    Script Date: 6/27/2017 9:49:37 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13,8 +13,8 @@ CREATE PROCEDURE [dbo].[usp_PlaceShot]
 	@playerid	int
 ) AS
 BEGIN
-	
-	
+	IF (dbo.fn_DetermineGameStatus(@gameid) = 2)
+	BEGIN
 		DECLARE		@turn	bit
 		,			@hostid	int
 		,			@joinid	int;
@@ -99,4 +99,11 @@ BEGIN
 		
 		END
 	END
+	ELSE
+	BEGIN
+		SELECT	'You cannot do that at this point in the game'	AS Error
+		,		NULL											AS [Message]
+		,		NULL											AS SunkShipId
+	END
+END
 GO
