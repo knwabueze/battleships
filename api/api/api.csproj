@@ -108,11 +108,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\GameUpdatePatch.cs" />
     <Compile Include="Models\LobbyGeneralInfo.cs" />
     <Compile Include="Models\LobbyPostInfo.cs" />
     <Compile Include="Models\LobbyCreationInfo.cs" />
-    <Compile Include="Models\ShipPlacement.cs" />
+    <Compile Include="Models\RequestGameUpdate.cs" />
+    <Compile Include="Models\ShipPlacementPatch.cs" />
     <Compile Include="Models\ShipPlacementInfo.cs" />
+    <Compile Include="Models\ShotPlacementInfo.cs" />
+    <Compile Include="Models\ShotPlacementPatch.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

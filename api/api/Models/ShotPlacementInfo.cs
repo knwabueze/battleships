@@ -6,7 +6,7 @@ using System.Web;
 
 namespace api.Models
 {
-    public class ShipPlacement
+    public class ShotPlacementInfo
     {
         [JsonProperty("x")]
         public int X { get; set; }
@@ -14,10 +14,10 @@ namespace api.Models
         [JsonProperty("y")]
         public int Y { get; set; }
 
-        [JsonProperty("size")]
-        public int Size { get; set; }
+        [JsonProperty("gameId")]
+        public int GameId { get; set; }
 
-        [JsonProperty("orientation")]
-        public char Orientation;
+        [JsonProperty("userId")]
+        public int PlayerId { get; set; }
     }
 }

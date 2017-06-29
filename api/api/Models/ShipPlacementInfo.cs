@@ -17,40 +17,13 @@ namespace api.Models
         [JsonProperty("y")]
         public int Y { get; set; }
 
-        [JsonIgnore]
-        private OrientationEnum _orientation;
-
         [JsonProperty("orientation")]
-        public string Orientation
-        {
-            get
-            {
-                return _orientation.ToString();
-            }
-
-            set
-            {
-                char val = value[0];
-
-                if (val == 'N' || val == 'E' || val == 'S' || val == 'W')
-                {
-                    _orientation = (OrientationEnum)val;
-                }
-            }
-        }
+        public char Orientation { get; set; }
 
         [JsonProperty("shipType")]
         public string ShipType { get; set; }
 
         [JsonProperty("gameId")]
         public int GameId { get; set; }
-    }
-
-    public enum OrientationEnum
-    {
-        North = 'N',
-        East = 'E',
-        South = 'S',
-        West = 'W'
     }
 }
