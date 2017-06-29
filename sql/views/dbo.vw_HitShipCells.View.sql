@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  View [dbo].[vw_HitShipCells]    Script Date: 6/27/2017 1:31:13 PM ******/
+/****** Object:  View [dbo].[vw_HitShipCells]    Script Date: 6/28/2017 8:40:28 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

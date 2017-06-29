@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  UserDefinedFunction [dbo].[fn_CheckIfIntersecting]    Script Date: 6/27/2017 1:27:18 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[fn_CheckIfIntersecting]    Script Date: 6/28/2017 8:40:27 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -37,6 +37,12 @@ BEGIN
 		AND			Y = @y + ( (@s - @counter) * @oriNum )  
 		AND			PlayerId = @playerid
 		)
+		BEGIN
+			RETURN 1;
+		END	
+		
+		ELSE IF (@y + ((@s - @counter) * @oriNum ) >= 10) OR (@y + ((@s - @counter) * @oriNum ) <= 0) OR
+		(@x >= 10) OR (@x <= 0)
 			RETURN 1;
 	END
 
@@ -49,6 +55,12 @@ BEGIN
 		AND			Y = @y
 		AND			PlayerId = @playerid
 		)
+		BEGIN
+			RETURN 1;
+		END			
+
+		ELSE IF (@x + ((@s - @counter) * @oriNum ) >= 10) OR (@x + ((@s - @counter) * @oriNum ) <= 0) OR
+		(@y >= 10) OR (@y <= 0)
 			RETURN 1;
 	END
 

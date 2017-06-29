@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_JoinLobby]    Script Date: 6/27/2017 1:27:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_JoinLobby]    Script Date: 6/28/2017 8:40:28 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22,23 +22,20 @@ WHERE		LobbyId = @lobbyid
 AND			JoinId	IS NULL
 
 --Did it work?
-DECLARE		@joinId int = -1;
+DECLARE		@joinId int = NULL;
 
-SELECT		[JoinId] = @joinId
+SELECT		@joinId = [JoinId]
 FROM		Lobbies
 WHERE		LobbyId = @lobbyid
 AND			JoinId	= @userid
 
-IF @joinId != -1
+IF @joinId IS NULL
 	BEGIN
-		SELECT -1 AS [Status]
+		SELECT -1 AS StatusCode
 	END
 ELSE
 	BEGIN
-		SELECT 0 AS [Status]
+		SELECT 0 AS StatusCode
 	END
 END
-
-
-
 GO

@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  UserDefinedFunction [dbo].[fn_CalculateShipCells]    Script Date: 6/27/2017 1:27:18 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[fn_CalculateShipCells]    Script Date: 6/28/2017 8:40:27 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
