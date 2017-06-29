@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_PlaceShot]    Script Date: 6/27/2017 9:49:37 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_PlaceShot]    Script Date: 6/28/2017 8:40:28 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -30,14 +30,28 @@ BEGIN
 		BEGIN			
 
 			IF EXISTS (SELECT * FROM HitCells WHERE X = @x AND Y = @y AND PlayerId = @playerid)
-			BEGIN							
-				SELECT 'Cell has already been shot at.' AS Error
+			BEGIN
+
+				SELECT	[Message]		AS Error
+				,		NULL			AS [Message]
+				,		NULL			AS SunkShipId
+				,		ErrorMessageId	AS ErrorCode
+				,		0				AS MessageCode
+				FROM	ErrorMessageLookup
+				WHERE	ErrorMessageId = 1
+
 				RETURN;
 			END
 
 			IF (@x > 10 OR @y > 10)
 			BEGIN
-				SELECT 'Shot is out of bounds' AS Error
+				SELECT	[Message]		AS Error
+				,		NULL			AS [Message]
+				,		NULL			AS SunkShipId
+				,		ErrorMessageId	AS ErrorCode
+				,		0				AS MessageCode
+				FROM	ErrorMessageLookup
+				WHERE	ErrorMessageId = 2
 			END
 
 			INSERT		HitCells
@@ -65,45 +79,71 @@ BEGIN
 				IF (dbo.fn_CalculateIfShipDown(@shipid) = 1)
 				BEGIN
 					SELECT		@shipid				AS SunkShipId
-					,			'Sunk enemy ship!'	AS [Message]
+					,			[Message]			AS [Message]
 					,			NULL				AS Error
+					,			0					AS ErrorCode
+					,			PreparedMessageId	AS MessageCode
+					FROM		PreparedMessageLookup
+					WHERE		PreparedMessageId = 1
 				END
 
 				ELSE IF (dbo.fn_CalculateIfAllShipsDown(@enemyid, @gameid) = 1)
 				BEGIN
-					SELECT		NULL						AS SunkShipId
-					,			'You won! Game finished'	AS [Message]
-					,			NULL						AS Error
+					SELECT		NULL				AS SunkShipId
+					,			[Message]			AS [Message]
+					,			NULL				AS Error
+					,			0					AS ErrorCode
+					,			PreparedMessageId	AS MessageCode
+					FROM		PreparedMessageLookup
+					WHERE		PreparedMessageId = 2
 				END
 
 				ELSE
 				BEGIN
-					SELECT 'Hit enemy ship!'	AS [Message]
-					,		NULL				AS SunkShipId
-					,		NULL				AS Error
+					SELECT		NULL				AS SunkShipId
+					,			[Message]			AS [Message]
+					,			NULL				AS Error
+					,			0					AS ErrorCode
+					,			PreparedMessageId	AS MessageCode
+					FROM		PreparedMessageLookup
+					WHERE		PreparedMessageId = 3
 				END
 			END
 			ELSE
 			BEGIN
-				SELECT	'Miss enemy ship!'		AS [Message]
-				,		NULL					AS Error
-				,		NULL					AS SunkShipId
+				SELECT		NULL				AS SunkShipId
+					,			[Message]			AS [Message]
+					,			NULL				AS Error
+					,			0					AS ErrorCode
+					,			PreparedMessageId	AS MessageCode
+					FROM		PreparedMessageLookup
+					WHERE		PreparedMessageId = 3
 			END
 		END
 
 		ELSE
 		BEGIN
-			SELECT 'It is not your turn.'	AS Error
-			,		NULL					AS [Message]
-			,		NULL					AS SunkShipId
-		
+			SELECT	[Message]		AS Error
+			,		NULL			AS [Message]
+			,		NULL			AS SunkShipId
+			,		ErrorMessageId	AS ErrorCode
+			,		0				AS MessageCode
+			FROM	ErrorMessageLookup
+			WHERE	ErrorMessageId = 3
 		END
 	END
 	ELSE
 	BEGIN
-		SELECT	'You cannot do that at this point in the game'	AS Error
-		,		NULL											AS [Message]
-		,		NULL											AS SunkShipId
+		SELECT	[Message]		AS Error
+		,		NULL			AS [Message]
+		,		NULL			AS SunkShipId
+		,		ErrorMessageId	AS ErrorCode
+		,		0				AS MessageCode
+		FROM	ErrorMessageLookup
+		WHERE	ErrorMessageId = 4
 	END
 END
+
+SELECT * FROM PreparedMessageLookup
+SELECT * FROM ErrorMessageLookup
 GO

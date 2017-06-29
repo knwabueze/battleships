@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_PollUpdate]    Script Date: 6/27/2017 9:49:37 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_PollUpdate]    Script Date: 6/28/2017 8:40:28 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -29,13 +29,17 @@ BEGIN
 		BEGIN
 			IF (dbo.fn_CalculateIfAllShipsDown(@playerid, @gameid) = 1)
 			BEGIN
-				SELECT		'Game is finished. You lost.' AS [Message]
+				SELECT		[Message]			AS [Message]
+				,			PreparedMessageId	AS MessageCode
+				,			0					AS ErrorCode
 				,			NULL				AS Error
 				,			NULL				AS X
 				,			NULL				AS Y
-				,			NULL				AS Payload
+				,			NULL				AS SunkShipId
+				FROM		PreparedMessageLookup
+				WHERE		PreparedMessageId = 5
 				RETURN;
-			END		
+			END
 		
 			ELSE
 			BEGIN		
@@ -51,59 +55,98 @@ BEGIN
 
 				IF EXISTS (SELECT * FROM vw_HitShipCells WHERE HitCellId = @lasthit)
 				BEGIN
-					SELECT	'Your ship was hit!'	AS [Message]
+					SELECT	pml.[Message]			AS [Message]
+					,		pml.PreparedMessageId	AS MessageCode
 					,		NULL					AS Error
-					,		NULL					AS Payload
+					,		0						AS ErrorCode
+					,		NULL					AS SunkShipId
 					,		temp.X					AS X
 					,		temp.Y					AS Y
-					FROM (SELECT X, Y FROM vw_HitShipCells WHERE HitCellId = @lasthit) AS temp
+					FROM	(SELECT X, Y FROM vw_HitShipCells WHERE HitCellId = @lasthit)	AS temp
+					,		PreparedMessageLookup											AS pml
+					WHERE	PreparedMessageId = 6
 				END
 
 				ELSE IF (dbo.fn_CalculateIfShipDown(@shipid) = 1)
 				BEGIN
-					SELECT	'Your ship was sunk.'	AS [Message]
-					,		NULL					AS Error
-					,		@shipid					AS Payload
-					,		NULL					AS X
-					,		NULL					AS Y
+					SELECT		[Message]				AS [Message]
+					,			pml.PreparedMessageId	AS MessageCode
+					,			0						AS ErrorCode
+					,			NULL					AS Error
+					,			temp.X					AS X
+					,			temp.Y					AS Y
+					,			@shipid					AS SunkShipId
+					FROM		(SELECT X, Y FROM vw_HitShipCells WHERE HitCellId = @lasthit)	AS temp
+					,			PreparedMessageLookup											AS pml
+					WHERE		PreparedMessageId = 7
 				END	
 
 				ELSE
 				BEGIN
-					SELECT	'Everything is OK!'		AS [Message]
-					,		NULL					AS Error
-					,		NULL					AS Payload
-					,		NULL					AS X
-					,		NULL					AS Y
+					SELECT		[Message]			AS [Message]
+					,			PreparedMessageId	AS MessageCode
+					,			0					AS ErrorCode
+					,			NULL				AS Error
+					,			NULL				AS X
+					,			NULL				AS Y
+					,			NULL				AS SunkShipId
+					FROM		PreparedMessageLookup
+					WHERE		PreparedMessageId = 8
 				END
 			END
 		END
 		ELSE IF (@lasthit IS NULL) AND ((@playerid = @hostid AND @turn = 0) OR (@joinid = @playerId AND @turn = 1))
 		BEGIN
-			SELECT		'You have already checked earlier this turn.'	AS Error
-			,			NULL											AS [Message]
-			,			NULL											AS Payload
-			,			NULL											AS X
-			,			NULL											AS Y
+			SELECT		[Message]		AS Error
+			,			ErrorMessageId	AS ErrorCode
+			,			NULL			AS [Message]
+			,			NULL			AS SunkShipId
+			,			0				AS MessageCode
+			,			NULL			AS X
+			,			NULL			AS Y
+			FROM		ErrorMessageLookup
+			WHERE		ErrorMessageId = 5
 			RETURN;
 		END
 		ELSE
 		BEGIN
-			SELECT		'It is not your turn.'	AS Error
-			,			NULL					AS [Message]
-			,			NULL					AS Payload
-			,			NULL					AS X
-			,			NULL					AS Y
+			SELECT		[Message]		AS Error
+			,			ErrorMessageId	AS ErrorCode
+			,			0				AS MessageCode
+			,			NULL			AS [Message]
+			,			NULL			AS SunkShipId
+			,			NULL			AS X
+			,			NULL			AS Y
+			FROM		ErrorMessageLookup
+			WHERE		ErrorMessageId = 6
 			RETURN;
 		END
 	END
 	ELSE
 	BEGIN
-		SELECT			'You can not check for updates at this stage in the game'	AS Error
-		,				NULL														AS [Message]
-		,				NULL														AS Payload
-		,				NULL														AS X
-		,				NULL														AS Y
+		IF (dbo.fn_CalculateIfAllShipsDown(@playerid, @gameid) = 1)
+		BEGIN
+			SELECT		[Message]			AS [Message]
+			,			PreparedMessageId	AS MessageCode
+			,			0					AS ErrorCode
+			,			NULL				AS Error
+			,			NULL				AS X
+			,			NULL				AS Y
+			,			NULL				AS SunkShipId
+			FROM		PreparedMessageLookup
+			WHERE		PreparedMessageId = 5
+			RETURN;
+		END
+
+		SELECT		[Message]		AS Error
+		,			ErrorMessageId	AS ErrorCode
+		,			0				AS MessageCode
+		,			NULL			AS [Message]
+		,			NULL			AS SunkShipId
+		,			NULL			AS X
+		,			NULL			AS Y
+		FROM		ErrorMessageLookup
+		WHERE		ErrorMessageId = 7
 	END
 END
 GO

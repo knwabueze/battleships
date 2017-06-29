@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  UserDefinedFunction [dbo].[fn_CalculateIfAllShipsDown]    Script Date: 6/27/2017 9:49:37 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[fn_CalculateIfAllShipsDown]    Script Date: 6/28/2017 8:40:27 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14,27 +14,27 @@ RETURNS BIT
 AS
 BEGIN
 
-DECLARE		@countShipsDown	int;
-DECLARE		@totalShips		int;
+	DECLARE		@countShipsDown	int;
+	DECLARE		@totalShips		int;
 
 
-SELECT			@countShipsDown = COUNT(*)
-FROM			vw_HitShipCells
-WHERE			HitPlayerId = @playerid
-AND				dbo.fn_CalculateIfShipDown(ShipId) = 1
-AND				GameId = @gameid
+	SELECT			@countShipsDown = COUNT(DISTINCT ShipId)
+	FROM			vw_HitShipCells
+	WHERE			HitPlayerId = @playerid
+	AND				dbo.fn_CalculateIfShipDown(ShipId) = 1
+	AND				GameId = @gameid
 
-SELECT			@totalShips = COUNT(*)
-FROM			vw_HitShipCells
-WHERE			HitPlayerId = @playerid
-AND				GameId = @gameid
+	SELECT			@totalShips = COUNT(DISTINCT ShipId)
+	FROM			vw_OccupiedCells
+	WHERE			PlayerId = @playerid
+	AND				GameId = @gameid
 
-IF (@countShipsDown >= @totalShips)
-BEGIN
-	RETURN 1;
-END
+	IF (@countShipsDown >= @totalShips)
+	BEGIN
+		RETURN 1;
+	END
 
-RETURN 0;
+	RETURN 0;
 
 END
 

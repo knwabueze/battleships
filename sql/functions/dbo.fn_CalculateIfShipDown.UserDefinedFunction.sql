@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  UserDefinedFunction [dbo].[fn_CalculateIfShipDown]    Script Date: 6/27/2017 9:49:37 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[fn_CalculateIfShipDown]    Script Date: 6/28/2017 8:40:27 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22,14 +22,14 @@ FROM		Ships			s
 WHERE		ShipId = @shipid
 AND			stl.TypeId = s.TypeId
 
-SELECT		@cellsHit = COUNT(*)
+SELECT		@cellsHit = COUNT(ShipId)
 FROM		vw_HitShipCells
 WHERE		ShipId = @shipid
+GROUP BY	ShipId
 
 IF @cellsHit = @size
 	RETURN 1;
 
 RETURN 0;
 END
-
 GO

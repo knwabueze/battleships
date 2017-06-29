@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_PlaceShip]    Script Date: 6/27/2017 9:49:37 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_PlaceShip]    Script Date: 6/28/2017 8:40:28 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -45,15 +45,18 @@ BEGIN
 				INSERT		Ships
 				VALUES		(@typeid, @userid, @gameid, @x, @y, @o)
 
-				SELECT		X	AS X
-				,			Y	AS Y
-				,			0   AS StatusCode
-				FROM		fn_CalculateShipCells(@x, @y, @s, @o)
+				SELECT		@x			AS X
+				,			@y			AS Y
+				,			@s			AS Size
+				,			@o			AS Orientation	
+				,			0			AS StatusCode
 			END
 			ELSE
 			BEGIN
 				SELECT		NULL	AS X
 				,			NULL	AS Y
+				,			NULL	AS Size
+				,			NULL	AS Orientation
 				,			-1		AS StatusCode
 			END
 		END
@@ -61,6 +64,8 @@ BEGIN
 		BEGIN
 			SELECT		NULL	AS X
 			,			NULL	AS Y
+			,			NULL	AS Size
+			,			NULL	AS Orientation
 			,			-1		AS StatusCode
 		END
 	END
