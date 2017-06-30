@@ -16,40 +16,13 @@ namespace Battleships.API.Controllers
     {
         private static readonly string connectionString =
                ConfigurationManager.ConnectionStrings["Local"].ConnectionString;
-
+        
+        
         /// <summary>
-        /// Initializes game from lobby; the lobby, however must be full (status of 1).
+        /// Place Ship during setup stage of the game. 
         /// </summary>
-        /// <param name="lobbyId"></param>
-        /// <returns>The id of the newly created game</returns>
-        [HttpPost]
-        [Route("initialize/{lobbyId}")]
-        public int? InitializeGame([FromUri]int lobbyId)
-        {
-            using (var connection = new SqlConnection(connectionString))
-            using (var command = new SqlCommand("usp_InitializeGame", connection))
-            {
-                var table = new DataTable();
-
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@fromlobbyid", lobbyId));
-                var dataAdapter = new SqlDataAdapter(command);
-
-                connection.Open();
-                dataAdapter.Fill(table);
-                connection.Close();
-
-                var dr = table.Rows[0];
-
-                if (int.Parse(dr["StatusCode"].ToString()) == 0)
-                {
-                    return int.Parse(dr["GameId"].ToString());
-                }
-
-                return null;
-            }
-        }
-
+        /// <param name="info"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("placeship")]
         public ShipPlacementPatch PlaceShip([FromBody]ShipPlacementInfo info)
@@ -90,6 +63,11 @@ namespace Battleships.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Place a shot during the ongoing phase of the game.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("placeshot")]
         public ShotPlacementPatch PlaceShot([FromBody]ShotPlacementInfo info)
@@ -153,6 +131,11 @@ namespace Battleships.API.Controllers
 
         }
 
+        /// <summary>
+        /// Poll for enemy actions one they finish.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("poll")]
         public GameUpdatePatch PollUpdate([FromBody]RequestGameUpdate request)

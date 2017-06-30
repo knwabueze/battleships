@@ -16,18 +16,18 @@ var domainName = 'http://localhost:52697';
         const joinLobbyButton = document.querySelector('#joinLobbyButton');
 
         createLobbyButton.addEventListener('click', event => {
-            submitButton(event, function () {
+            submitButton(function () {
                 window.location.pathname = '/create-lobby';
             });
         });
 
         joinLobbyButton.addEventListener('click', event => {
-            submitButton(event, function () {
+            submitButton(function () {
                 window.location.pathname = '/join-lobby';
             });
         });
 
-        function submitButton(event, callback) {
+        function submitButton(callback) {
             if (usernameTextBox.value.trim() !== '') {
                 console.log('hit');
                 window.fetch(`${domainName}/api/users/register`, {

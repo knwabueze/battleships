@@ -20,6 +20,67 @@ namespace Battleships.API.Controllers
         private static readonly string connectionString =
                ConfigurationManager.ConnectionStrings["Local"].ConnectionString;
 
+
+        /// <summary>
+        /// Polls an update to check if lobby is full, if so use the returned gameId to follow into main game
+        /// </summary>
+        /// <param name="lobbyId"></param>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("poll/{lobbyId}")]
+        public GameInitializationPatch PollLobby([FromUri]int lobbyId, [FromBody]int playerId)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("usp_PollLobby", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@lobbyid", lobbyId));
+                command.Parameters.Add(new SqlParameter("@userid", playerId));
+                SqlDataAdapter sda = new SqlDataAdapter(command);
+
+                try
+                {
+                    connection.Open();
+
+                    var table = new DataTable();
+
+                    sda.Fill(table);
+
+                    var dataRow = table.Rows[0];
+
+                    int statusCode = int.Parse(dataRow["StatusCode"].ToString());
+
+                    switch (statusCode)
+                    {
+                        case 0:
+                            return new GameInitializationPatch()
+                            {
+                                StatusCode = statusCode,
+                                GameId = int.Parse(dataRow["GameId"].ToString())
+                            };
+                        case 1:
+                        case -1:
+                            return new GameInitializationPatch()
+                            {
+                                StatusCode = statusCode,
+                                GameId = null
+                            };
+                    }
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        connection.Close();
+                    }
+                }
+
+                return default(GameInitializationPatch);
+            }
+        }
+
         /// <summary>
         /// Create a new lobby.
         /// </summary>
@@ -86,11 +147,11 @@ namespace Battleships.API.Controllers
                 connection.Close();
 
                 return errCode;
-            }            
+            }
         }
 
         /// <summary>
-        /// Lists all available lobbies.
+        /// Lists all available lobbies.        
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -116,10 +177,10 @@ namespace Battleships.API.Controllers
                 {
                     model[i] = new LobbyGeneralInfo()
                     {
-                       LobbyName = table.Rows[i]["Name"].ToString(),
-                       LobbyId = int.Parse(table.Rows[i]["LobbyId"].ToString()),
-                       CreationDate = DateTime.Parse(table.Rows[i]["CreationDate"].ToString()),
-                       HostUsername = table.Rows[i]["Username"].ToString()
+                        LobbyName = table.Rows[i]["Name"].ToString(),
+                        LobbyId = int.Parse(table.Rows[i]["LobbyId"].ToString()),
+                        CreationDate = DateTime.Parse(table.Rows[i]["CreationDate"].ToString()),
+                        HostUsername = table.Rows[i]["Username"].ToString()
                     };
                 }
 

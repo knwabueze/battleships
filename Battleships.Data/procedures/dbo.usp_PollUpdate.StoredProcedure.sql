@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_PollUpdate]    Script Date: 6/28/2017 8:40:28 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_PollUpdate]    Script Date: 6/29/2017 11:29:11 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
