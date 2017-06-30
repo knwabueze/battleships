@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [KosiNwabuezeBattleships2017]    Script Date: 6/29/2017 11:29:10 PM ******/
+/****** Object:  Database [KosiNwabuezeBattleships2017]    Script Date: 6/30/2017 2:59:48 PM ******/
 CREATE DATABASE [KosiNwabuezeBattleships2017]
  CONTAINMENT = NONE
  ON  PRIMARY 

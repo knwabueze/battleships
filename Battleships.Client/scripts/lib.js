@@ -1,7 +1,7 @@
 'use strict';
 var domainName = 'http://localhost:52697';
 
-const Async = (function () {
+const Lib = (function () {
     class GameInitializationPatch {
         constructor(statusCode, gameId, opponentName) {
             this.statusCode = statusCode;
@@ -25,8 +25,6 @@ const Async = (function () {
 
         return new GameInitializationPatch(data.statusCode, data.gameId, data.opponentName);
     }
-
-    
 
     return {
         pollLobby

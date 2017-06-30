@@ -1,3 +1,5 @@
+'use strict';
+
 (function ($) {
     document.addEventListener('DOMContentLoaded', function () {
         // Check if currentUser element and lobbyId is in sessionStorage
@@ -12,16 +14,17 @@
         populateVersusTemplate(currentUser, $);
 
         const stopInterval = setInterval(async () => {
-            const gameInitializationPatch = await Async.pollLobby(currentLobby.lobbyId, currentUser.id);
+            const gameInitializationPatch = await Lib.pollLobby(currentLobby.lobbyId, currentUser.id);
 
             if (gameInitializationPatch.statusCode === 0) {
                 window.clearInterval(stopInterval);
                 console.log(gameInitializationPatch);
 
                 clearVersusTemplate($);
+
                 populateVersusTemplate(currentUser, $, gameInitializationPatch.opponentName);
             }
-        }, 2000);
+        }, 500);
     });
 })(item => document.querySelector(item));
 

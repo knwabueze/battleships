@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_PollLobby]    Script Date: 6/29/2017 11:29:11 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_PollLobby]    Script Date: 6/30/2017 2:59:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -24,6 +24,7 @@ BEGIN
 	BEGIN
 		SELECT	1		AS StatusCode
 		,		NULL	AS GameId
+		,		NULL	AS OpponentName
 	END
 
 	ELSE
@@ -34,6 +35,11 @@ BEGIN
 			,		(	SELECT		GameId
 						FROM		Games
 						WHERE		FromLobbyId = @lobbyid)	AS GameId
+			,		(
+						SELECT	OpponentName
+						FROM	vw_OpponentsByGame
+						WHERE	YourId = @userid
+						AND		LobbyId = @lobbyid)			AS OpponentName
 		END
 
 		ELSE

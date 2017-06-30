@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_CreateUser]    Script Date: 6/29/2017 11:29:11 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_CreateUser]    Script Date: 6/30/2017 2:59:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

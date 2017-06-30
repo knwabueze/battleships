@@ -1,6 +1,6 @@
 USE [KosiNwabuezeBattleships2017]
 GO
-/****** Object:  UserDefinedFunction [dbo].[fn_DetermineFinishedSetup]    Script Date: 6/29/2017 11:29:10 PM ******/
+/****** Object:  UserDefinedFunction [dbo].[fn_DetermineFinishedSetup]    Script Date: 6/30/2017 2:59:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
