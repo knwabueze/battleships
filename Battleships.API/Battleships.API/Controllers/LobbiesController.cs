@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Battleships.API.Controllers
 {
@@ -15,6 +16,7 @@ namespace Battleships.API.Controllers
     /// WebAPI 2 Controller for handling SQL server interactions surrounding the Lobbies table.
     /// </summary>
     [RoutePrefix("api/lobbies")]
+    [EnableCors("*", "*", "*")]
     public class LobbiesController : ApiController
     {
         private static readonly string connectionString =
@@ -58,7 +60,8 @@ namespace Battleships.API.Controllers
                             return new GameInitializationPatch()
                             {
                                 StatusCode = statusCode,
-                                GameId = int.Parse(dataRow["GameId"].ToString())
+                                GameId = int.Parse(dataRow["GameId"].ToString()),
+                                OpponentName = dataRow["OpponentName"].ToString()
                             };
                         case 1:
                         case -1:

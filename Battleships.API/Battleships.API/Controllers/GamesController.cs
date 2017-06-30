@@ -8,10 +8,15 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Battleships.API.Models;
+using System.Web.Http.Cors;
 
 namespace Battleships.API.Controllers
 {
+    /// <summary>
+    /// Web API 2 Controller for controlling actions during the game
+    /// </summary>
     [RoutePrefix("api/games")]
+    [EnableCors("*", "*", "*")]
     public class GamesController : ApiController
     {
         private static readonly string connectionString =

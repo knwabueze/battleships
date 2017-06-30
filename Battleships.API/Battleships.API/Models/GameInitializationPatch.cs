@@ -13,5 +13,8 @@ namespace Battleships.API.Models
 
         [JsonProperty("gameId")]
         public int? GameId { get; set; }
+
+        [JsonProperty("opponentName")]
+        public string OpponentName { get; set; }
     }
 }

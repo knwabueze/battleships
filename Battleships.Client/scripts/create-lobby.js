@@ -10,18 +10,21 @@ var domainName = 'http://localhost:52697';
             window.location.pathname = '/';
         }
 
-        const createLobbyTextBox = $('#createLobbyTextBox');
-        const submitButton = $('#submitButton');
-        const usernameHeading = $('#usernameHeading');
+        const $text = $('#createLobbyTextBox');
+        const $submit = $('#submitButton');
+        const $usernameHeading = $('#usernameHeading');
 
 
-        usernameHeading.textContent = currentUser.username;
+        $usernameHeading.textContent = currentUser.username;
 
-        submitButton.addEventListener('click', event => {
-            createLobby(createLobbyTextBox.value, function (json) {
-                sessionStorage.setItem("lobbyInfo", JSON.stringify(json));
+        $submit.addEventListener('click', event => {
+            createLobby($text.value, function (json) {
 
-                window.location.pathname = '/lobby/'
+                const val = Object.assign({}, json, { hostUsername: currentUser.username });
+
+                sessionStorage.setItem("currentLobby", JSON.stringify(val));
+
+                window.location.href = '/game'
             });
         });
 
