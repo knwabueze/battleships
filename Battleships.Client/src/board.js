@@ -34,10 +34,6 @@ const BattleshipsInstance = (function () {
             this.y = y;
             this.color = new Color(255, 255, 255, "white");
         }
-
-        get color() {
-            return color;
-        }
     }
 
     class ShotCell extends Cell {
@@ -58,7 +54,7 @@ const BattleshipsInstance = (function () {
             super();
             for (let i = 1; i <= 10; i++) {
                 for (let j = 1; j <= 10; j++) {
-                    this.cell(j, i) = new Cell(j, i);
+                    this.setCell(j, i, new Cell(j, i));
                 }
             }
         }
@@ -71,9 +67,13 @@ const BattleshipsInstance = (function () {
             return true;
         }
 
-        cell(x, y) {
+        getCell(x, y) {
             return this[((10 * y) + x) - 10];
-        }        
+        }   
+
+        setCell(x, y, value) {
+            this[((10 * y) + x) - 10] = value;
+        }  
 
         findShip(shipType) {
             const shipCells = [];
