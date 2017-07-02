@@ -1,0 +1,9 @@
+.game-board td {
+    border: 1px solid black;
+    width: 20px;
+    height: 20px;
+}
+
+#opponent-board td:hover {
+    background-color: rgba(255, 0, 0, 0.5);
+}

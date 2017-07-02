@@ -68,11 +68,11 @@ const BattleshipsInstance = (function () {
         }
 
         getCell(x, y) {
-            return this[((10 * y) + x) - 10];
+            return this[((10 * y) + x) - 11];
         }   
 
         setCell(x, y, value) {
-            this[((10 * y) + x) - 10] = value;
+            this[((10 * y) + x) - 11] = value;
         }  
 
         findShip(shipType) {

@@ -1,7 +1,7 @@
 'use strict';
 var domainName = 'http://localhost:52697';
 
-const Lib = (function () {
+const Ajax = (function () {
     class GameInitializationPatch {
         constructor(statusCode, gameId, opponentName) {
             this.statusCode = statusCode;

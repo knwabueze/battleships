@@ -64,44 +64,49 @@ function grabAllLobbiesCallback(data, lobbyTable, currentUser) {
 
         // Append markup to lobbyTable node
         lobbyTable.appendChild($insertNode);
-    }
 
-    lobbyTable.addEventListener('click', function (e) {
-        if (e.target && e.target.nodeName === 'TD') {
-            const $parent = e.target.parentElement;
+        // Select the newly selected node by data-id
+        const $newlyInsertedNode = document.querySelector(`[data-id='${lobbyId}']`);
 
+        // Bind a click event listener to that element
+        $newlyInsertedNode.addEventListener('click', async function () {
             const { id: userId } = currentUser;
 
             const val = {
-                lobbyId: $parent.dataset.id,
-                createdAt: $parent.dataset.createdAt,
-                lobbyName: $parent.dataset.lobbyName,
-                hostUsername: $parent.dataset.hostName
-            }
+                lobbyId,
+                createdAt,
+                lobbyName,
+                hostUsername
+            };
 
-            joinLobby({ lobbyId: val.lobbyId, userId }, function (item) {
-                if (item === 0) {
-                    sessionStorage.setItem("currentLobby", JSON.stringify(val));
-                    window.location.href = '/game';
-                }
-            });
-        }
-    });
+            const statusCode = await joinLobby({ lobbyId: lobbyId, userId });
+
+            if (statusCode === 0) {
+                sessionStorage.setItem("currentLobby", JSON.stringify(val));
+                window.location.href = '/game';
+            }
+        });
+    }
 }
 
-async function joinLobby({ lobbyId, userId }, callback) {
+function joinLobby({ lobbyId, userId }) {
+    return new Promise(async (resolve, reject) => {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userId)
+        };
 
-    const options = {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userId)
-    };
+        try {
+            const response = await window.fetch(`${domainName}/api/lobbies/join/${lobbyId}`, options);
+            const data = await response.json();
 
-    const response = await window.fetch(`${domainName}/api/lobbies/join/${lobbyId}`, options);
-    const data = await response.json();
-
-    callback(data);
+            return resolve(data);
+        } catch (ex) {
+            return reject(ex);
+        }
+    });
 }

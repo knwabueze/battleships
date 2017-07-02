@@ -5,11 +5,11 @@
   "repository": "https://github.com/knwabueze/battleships",
   "author": "knwabueze (Kosi Nwabueze)",
   "license": "MIT",
-  "dependencies": {
-    "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.5.0"
-  },
+  "dependencies": {},
   "scripts": {
-    "start": "webpack-dev-server --open"
+    "start": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.0"
   }
 }
