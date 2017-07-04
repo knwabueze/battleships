@@ -113,6 +113,7 @@
     <Compile Include="Models\LobbyGeneralInfo.cs" />
     <Compile Include="Models\LobbyPostInfo.cs" />
     <Compile Include="Models\LobbyCreationInfo.cs" />
+    <Compile Include="Models\ReadyStatePatch.cs" />
     <Compile Include="Models\RequestGameUpdate.cs" />
     <Compile Include="Models\ShipPlacementPatch.cs" />
     <Compile Include="Models\ShipPlacementInfo.cs" />

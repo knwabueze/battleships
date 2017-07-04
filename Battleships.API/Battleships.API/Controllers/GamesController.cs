@@ -21,8 +21,35 @@ namespace Battleships.API.Controllers
     {
         private static readonly string connectionString =
                ConfigurationManager.ConnectionStrings["Local"].ConnectionString;
-        
-        
+
+        [HttpGet]
+        [Route("ready")]
+        public ReadyStatePatch ReadyToStart([FromUri]int gameId)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("usp_ReadyToStart", connection))
+            {
+                var table = new DataTable();
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@gameid", gameId));
+
+                var dataAdapter = new SqlDataAdapter(command);
+
+                connection.Open();
+                dataAdapter.Fill(table);
+                connection.Close();
+
+                var dataRow = table.Rows[0];
+
+                return new ReadyStatePatch()
+                {
+                    StatusCode = int.Parse(dataRow["StatusCode"].ToString()),
+                    Message = dataRow["Message"].ToString()
+                };
+            }
+        }
+
         /// <summary>
         /// Place Ship during setup stage of the game. 
         /// </summary>

@@ -1,8 +1,0 @@
-.table-row:hover {
-    cursor: pointer; 
-}
-
-.table-row > td:hover {
-    text-decoration: underline;
-    color: blue;
-}

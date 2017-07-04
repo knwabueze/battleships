@@ -1,15 +1,20 @@
 {
   "name": "battleships-client",
-  "version": "1.0.0",
-  "description": "The frontend layer for my battleships project.",
-  "repository": "https://github.com/knwabueze/battleships",
-  "author": "knwabueze (Kosi Nwabueze)",
-  "license": "MIT",
-  "dependencies": {},
-  "scripts": {
-    "start": "live-server"
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.1"
   },
   "devDependencies": {
-    "live-server": "^1.2.0"
-  }
+    "react-scripts": "1.0.10"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:52697"
 }
