@@ -1,5 +1,3 @@
-import fetch from 'isomorphic-fetch';
-
 const createController = {
     /**
      * @typedef {Object} CreateLobbyPatch

@@ -2,6 +2,6 @@ body {
     margin: 0;
 }
 
-input, h1, h2, h3, h4, h5, h6, p, blockquote, button, table {
+input, h1, h2, h3, h4, h5, h6, p, blockquote, button, table, label {
     font-family: Roboto, 'sans-serif' !important;
 }

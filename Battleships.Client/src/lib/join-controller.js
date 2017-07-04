@@ -1,5 +1,3 @@
-import fetch from 'isomorphic-fetch';
-
 const joinController = {
     fetchLobbies: function () {
         return new Promise(async (resolve, reject) => {

@@ -1,5 +1,3 @@
-import fetch from 'isomorphic-fetch';
-
 const homeController = {
     joinLobby: async function (value, history) {
         const result = await homeController.register(value);
