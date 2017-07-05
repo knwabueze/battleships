@@ -46,13 +46,17 @@
         opacity: 0.3;
         pointer-events: none;
     }
-
-    .Game_board--place-ships td:hover {
+    
+    .Game_board_cell--hover {
         background-color: rgba(0, 0, 255, 0.3);
         cursor: pointer;
     }
 
-    .Game_board_cell--active {
+    .Game_board_cell--error {
+        background-color: rgba(255, 0, 0, 0.8);
+    }
+
+    .Game_board_cell--ship {
         background-color: silver;
     }
 /* END Boards Section */

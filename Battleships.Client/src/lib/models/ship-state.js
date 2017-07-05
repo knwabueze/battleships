@@ -9,16 +9,16 @@ export class ShipState extends Record({ type: ShipType, x: null, y: null, orient
     for (let i = 0; i < this.type.length; i++) {
       switch (this.orientation) {
         case 'N':
-          result.push([this.x, this.y - i]);
+          result.push({ x: this.x, y: this.y + i });
           break;
         case 'E':
-          result.push([this.x - i, this.y]);
+          result.push({ x: this.x - i, y: this.y });
           break;
         case 'S':
-          result.push([this.x, this.y + 1]);
+          result.push({ x: this.x, y: this.y - i });
           break;
         case 'W':
-          result.push([this.x + i, this.y]);
+          result.push({ x: this.x + i, y: this.y });
           break;
         default:
           throw new TypeError("Orientation must be of values N, E, S, or W.");

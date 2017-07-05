@@ -1,42 +1,55 @@
 import React from 'react';
 
-import GameState from '../lib/models/game-state';
-import * as Utils from '../lib/utils'
+export default class GameBoardTable extends React.Component {
+  _renderRows = (row, col) => {
+    const rows = [];
+    for (let y = 1; y <= row; y++) {
+      const cells = [];
+      for (let x = 1; x <= col; x++) {
+        // const types = cellsState
+        //   .filter(cell => cell.x === x && cell.y === y)
+        //   .map(cell => cell.class);
 
-const oneToTen = () => {
-  const result = [];
-  for (let i = 1; i <= 10; i++) {
-    result.push(i);
-  }
-  return result;
-}
-
-const isPlacingShip = (selectedShip, state) => (!!selectedShip || selectedShip === 0) && state === GameState.Pregame;
-const isShipCell = (x, y, ships) => {
-  if (!ships) return false;
-
-  const placedShipCells = Utils.shallowFlatten(ships.map(ship => ship.cells).toJS());
-  return placedShipCells.some(cells => cells[0] === x && cells[1] === y);
-}
-
-const GameBoardTable = ({ faded, selectedShip, ships, cellClicked, state, className, ...rest }) =>
-  <table className={`${className} 
-    ${isPlacingShip(selectedShip, state) && 'Game_board--place-ships'} 
-    ${faded && 'Game_board--faded'}`} {...rest}>
-    <tbody>
-      {
-        oneToTen().map(y => <tr key={y}>
-          {
-            oneToTen().map(x => {
-              return <td className={isShipCell(x, y, ships) ? 'Game_board_cell--active' : ''}
-                onClick={() => cellClicked(x, y)}
-                key={(y * 10) + x - 10} />
-            })
-          }
-        </tr>)
+        cells.push(this._renderCell(x, y));
       }
-    </tbody>
-  </table>;
+      rows.push(<tr key={y}>{cells}</tr>);
+    }
+    return rows;
+  }
 
-window.isShipCell = isShipCell;
-export default GameBoardTable;
+  _renderCell = (x, y) => {
+    const key = (10 * y) + x - 10;
+    const { cellClicked, startCellHovered, endCellHovered } = this.props;
+    const { cellsState } = this.props;
+
+    let classes = '';
+
+    if (!!cellsState) {
+      const matches = cellsState.filter(cell => cell.x === x && cell.y === y);
+      classes = `${matches.map(match => match.class).join(" ")}`
+    }
+
+    return (
+      <td
+        key={key}
+        className={`Game_board_cell ${classes}`}
+        onClick={() => cellClicked(x, y)}
+        onMouseEnter={() => startCellHovered(x, y)}
+        onMouseLeave={() => endCellHovered(x, y)}
+      />
+    );
+  }
+
+  render() {
+    const {
+      faded = false,
+      className } = this.props;
+
+    return <table className={`${className}  
+    ${faded && 'Game_board--faded'}`}>
+      <tbody>
+        {this._renderRows(10, 10)}
+      </tbody>
+    </table>
+  }
+}

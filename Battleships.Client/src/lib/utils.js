@@ -15,3 +15,25 @@ export function deepFlatten(arr) {
         return prev.concat(Array.isArray(curr) ? deepFlatten(curr) : curr);
     }, []);
 }
+
+export function elongateOrientation(ori) {
+    switch (ori) {
+        case 'N':
+            return 'North';
+        case 'E':
+            return 'East';
+        case 'S':
+            return 'South';
+        case 'W':
+            return 'West';
+        default:
+            return ori;
+    }
+}
+
+export function intersects(a, b) {
+    var setA = new Set(a);
+    var setB = new Set(b);
+    var intersection = new Set([...setA].filter(x => setB.has(x)));
+    return Array.from(intersection).length > 0;
+}
