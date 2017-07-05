@@ -2,7 +2,7 @@ import React from 'react';
 
 import CreateController from '../lib/create-controller';
 
-import './create.css';
+import '../styles/create.css';
 
 export default class Create extends React.Component {
     state = {

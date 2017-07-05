@@ -1,0 +1,92 @@
+.Game_container {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    width: 100vw;
+    min-height: 100vh;
+    min-width: fit-content;    
+    height: fit-content;
+}
+
+.Game_vs-tag {
+    font-weight: 200;
+}
+
+.Game_main {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    box-sizing: border-box;
+    width: 70%;
+}
+
+/* START Boards Section */
+    .Game_boards {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .Game_board {
+        border-collapse: collapse;
+    }
+
+    .Game_boards .Game_board:first-child {
+        margin-right: 40px;
+    }
+
+    .Game_board td {
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    .Game_board--faded {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    .Game_board--place-ships td:hover {
+        background-color: rgba(0, 0, 255, 0.3);
+        cursor: pointer;
+    }
+
+    .Game_board_cell--active {
+        background-color: silver;
+    }
+/* END Boards Section */
+
+/* START Aside Section */
+    .Game_aside {
+        background-color: whitesmoke;
+        width: 30%;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .Game_list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .Game_list_item_hoverable:hover {
+        cursor: pointer;
+    }
+/* END Aside Section */
+
+.Game_subtitle {
+    font-weight: 400;
+}
+
+.Game_subtitle.Game_subtitle--aside {
+    text-decoration: underline;
+}
+
+.Game_bold {
+    font-weight: bold;
+}

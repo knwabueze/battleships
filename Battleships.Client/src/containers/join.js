@@ -1,5 +1,5 @@
 import React from 'react';
-import './join.css';
+import '../styles/join.css';
 
 import JoinTable from '../components/join-table'
 import JoinController from '../lib/join-controller';

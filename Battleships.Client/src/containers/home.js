@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './home.css';
+import '../styles/home.css';
 
 import * as Utils from '../lib/utils';
 import HomeController from '../lib/home-controller';
