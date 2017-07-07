@@ -67,15 +67,21 @@ export class Board {
         )(rows);
     }
 
-    setCellMetadata(x, y, metadata) {
-        const cell = R.lensPath(['cellSet', y - 1, x - 1]);
-        const cellView = R.view(cell, this);
+    static setCellMetadata(Board, x, y, metadata) {
+        const cellLens = R.lensPath(['cellSet', y - 1, x - 1]);
+        const cellView = R.view(cellLens, Board);
 
-        this.cellSet[y - 1][x - 1] = cellView.setMetadata(metadata);
+        const recreate = R.compose(
+            R.assoc('__prop__', Board.prototype),
+            R.set(cellLens, cellView.setMetadata(metadata))
+        );
+
+        return recreate(Board);
     }
 
-    getCell(x, y) {
+    static getCell(Board, x, y) {
         const cell = R.lensPath(['cellSet', y - 1, x - 1]);
-        return R.view(cell, this);
+
+        return R.view(cell, Board);
     }
 }

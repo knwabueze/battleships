@@ -85,19 +85,13 @@ export default class Game extends React.Component {
           <h1 className="Game_title">battleships.</h1>
           <h2 className="Game_vs-tag">{username} vs. {this.enemyName}.</h2>
           <div className="Game_boards">
-            <GameBoard />
-            <GameBoard faded={true} />
+            <GameBoard gameState={gameState} />
+            <GameBoard gameState={gameState} faded={true} />
           </div>
         </main>
         <div className="Game_aside">
           <h2 className="Game_subtitle Game_subtitle--aside">{lobbyName}</h2>
-          {
-            {
-              [GameState.Pregame]: (
-                <GameAside />
-              )
-            }[gameState]
-          }
+          <GameAside gameState={gameState} />
         </div>
       </div>
     );

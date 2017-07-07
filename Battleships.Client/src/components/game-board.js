@@ -16,8 +16,10 @@ export default class GameBoard extends React.Component {
   _onCellHovered = (x, y) => {
     const { boardState } = this.state;
 
-    if (boardState.getCell(x, y).metadata !== CellMetadatas.HOVER) {
-      boardState.setCellMetadata(x, y, CellMetadatas.HOVER);
+    if (Board.getCell(boardState, x, y).metadata !== CellMetadatas.HOVER) {
+      this.setState({
+        boardState: Board.setCellMetadata(boardState, x, y, CellMetadatas.HOVER)
+      });
     }
   }
 
@@ -42,8 +44,10 @@ export default class GameBoard extends React.Component {
   _onCellHoveredEnd = (x, y) => {
     const { boardState } = this.state;
 
-    if (boardState.getCell(x, y).metadata !== CellMetadatas.WATER) {
-      boardState.setCellMetadata(x, y, CellMetadatas.WATER);
+    if (Board.getCell(boardState, x, y).metadata !== CellMetadatas.WATER) {
+      this.setState({
+        boardState: Board.setCellMetadata(boardState, x, y, CellMetadatas.WATER)
+      });
     }
   }
 
