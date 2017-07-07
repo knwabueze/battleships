@@ -2,19 +2,14 @@ import React from 'react';
 
 import '../styles/home.css';
 
-import * as Utils from '../lib/utils';
 import HomeController from '../lib/home-controller';
 
 export default class Home extends React.Component {
-
     state = {
         textbox: ""
     };
 
-    onClicked = e => {
-        const command = Utils.snakeToCamel(e.target.id);
-        HomeController.execute(command, this.state.textbox, this.props.history);
-    }
+    onClicked = cmd => HomeController.execute(cmd, this.state.textbox, this.props.history);
 
     render() {
         return (
@@ -26,12 +21,10 @@ export default class Home extends React.Component {
                     className="Home_textbox" type="text" />
                 <div className="Home_buttons">
                     <button
-                        id="create-lobby"
-                        onClick={this.onClicked}
+                        onClick={() => this.onClicked("createLobby")}
                         className="Home_button Home_button--first-child">Create Lobby</button>
                     <button
-                        id="join-lobby"
-                        onClick={this.onClicked}
+                        onClick={() => this.onClicked("joinLobby")}
                         className="Home_button">Join Lobby</button>
                 </div>
             </div>

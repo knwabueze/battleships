@@ -1,54 +1,34 @@
 import React from 'react';
 
-export default class GameBoardTable extends React.Component {
-  _renderRows = (row, col) => {
-    const rows = [];
-    for (let y = 1; y <= row; y++) {
-      const cells = [];
-      for (let x = 1; x <= col; x++) {
-        // const types = cellsState
-        //   .filter(cell => cell.x === x && cell.y === y)
-        //   .map(cell => cell.class);
+import { CellMetadatas } from '../lib/models/board-state'
 
-        cells.push(this._renderCell(x, y));
-      }
-      rows.push(<tr key={y}>{cells}</tr>);
+export default class GameBoardTable extends React.Component {
+  _onCellHovered = (x, y) => {
+    const { boardState, updateBoardState } = this.props;
+
+    if (boardState.getCellMetadata(x, y) !== CellMetadatas.HOVER) {
+      updateBoardState(boardState.setCellMetadata(x, y, CellMetadatas.HOVER));
     }
-    return rows;
   }
 
-  _renderCell = (x, y) => {
-    const key = (10 * y) + x - 10;
-    const { cellClicked, startCellHovered, endCellHovered } = this.props;
-    const { cellsState } = this.props;
+  _onCellHoveredEnd = (x, y) => {
+    const { boardState, updateBoardState } = this.props;
 
-    let classes = '';
-
-    if (!!cellsState) {
-      const matches = cellsState.filter(cell => cell.x === x && cell.y === y);
-      classes = `${matches.map(match => match.class).join(" ")}`
+    if (boardState.getCellMetadata(x, y) !== CellMetadatas.WATER) {
+      updateBoardState(boardState.setCellMetadata(x, y, CellMetadatas.WATER));
     }
+  }
 
-    return (
-      <td
-        key={key}
-        className={`Game_board_cell ${classes}`}
-        onClick={() => cellClicked(x, y)}
-        onMouseEnter={() => startCellHovered(x, y)}
-        onMouseLeave={() => endCellHovered(x, y)}
-      />
-    );
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.boardState !== this.props.boardState;
   }
 
   render() {
-    const {
-      faded = false,
-      className } = this.props;
+    const { faded = false, boardState } = this.props;
 
-    return <table className={`${className}  
-    ${faded && 'Game_board--faded'}`}>
+    return <table className={`Game_board ${faded ? 'Game_board--faded' : ''}`}>
       <tbody>
-        {this._renderRows(10, 10)}
+        {!!boardState ? boardState.toJSX(this._onCellHovered, this._onCellHoveredEnd) : null}
       </tbody>
     </table>
   }

@@ -1,9 +1,3 @@
-/**
- * SearchingForMatch
- * Pregam
- * Midgame
- * Postgame
- */
 var GameState = {};
 
 (function (GameState) {

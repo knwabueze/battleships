@@ -1,11 +1,11 @@
 import React from 'react';
+import * as R from 'ramda';
 
 import GameController from '../lib/game-controller';
 import GameState from '../lib/models/game-state';
 import GameBoardTable from '../components/game-board-table';
-import GameAsidePregame from '../components/game-aside-pregame';
-import { ShipStates, ShipState, ShipTypes } from '../lib/models/ship-state'
-import * as Utils from '../lib/utils'
+import GameAside from '../components/game-aside';
+import { Board } from '../lib/models/board-state';
 
 import '../styles/game.css';
 
@@ -16,12 +16,10 @@ export default class Game extends React.Component {
     currentLobby: {},
     currentSpinnerState: '⣾',
     spinnerIntervalId: 0,
-    pollGameStateId: 0,
+    pollGameStateIntervalId: 0,
     gameState: GameState.SearchingForMatch,
-    shipStates: ShipStates,
-    selectedShip: null,
-    currentHoveredCells: null,
-    orientation: null
+    boardState: new Board(10, 10),
+    enemyBoardState: new Board(10, 10)
   }
 
   componentWillMount() {
@@ -50,7 +48,7 @@ export default class Game extends React.Component {
         clearInterval(spinnerIntervalId);
 
         this.setState({ opponentName: gamePollPatch.opponentName });
-        this.setState({ pollGameStateId: null });
+        this.setState({ pollGameStateIntervalId: null });
         this.setState({ spinnerIntervalId: null });
         this.setState({ gameState: GameState.Pregame });
         document.title = `Battleships | ${currentUser.username} vs. ${gamePollPatch.opponentName}`;
@@ -60,6 +58,13 @@ export default class Game extends React.Component {
     this.setState({
       pollGameStateId
     });
+  }
+
+  componentWillUnmount() {
+    const { spinnerIntervalId, pollGameStateIntervalId } = this.state;
+
+    if (!!spinnerIntervalId) clearInterval(spinnerIntervalId);
+    if (!!pollGameStateIntervalId) clearInterval(pollGameStateIntervalId);
   }
 
   static newSpinnerState(currentSpinner) {
@@ -73,117 +78,14 @@ export default class Game extends React.Component {
     return !!opponentName ? opponentName : `${currentSpinnerState}`;
   }
 
-  _changeSelectedShip = idx => {
-    const { selectedShip: currentIdx, orientation } = this.state;
-
-    if (currentIdx === idx) {
-      switch (orientation) {
-        case 'N':
-          this.setState({ orientation: 'E' });
-          break;
-        case 'E':
-          this.setState({ orientation: 'S' });
-          break;
-        case 'S':
-          this.setState({ orientation: 'W' });
-          break;
-        case 'W':
-          this.setState({ orientation: 'N' });
-          break;
-        default:
-          this.setState({ orientation: null });
-      }
-    } else {
-      this.setState({ orientation: 'N' });
-      this.setState({ selectedShip: idx });
-    }
-  }
-
-  _onYourCellClicked = (x, y) => { // very logic heavy, writing this beforehand but I know I will need to refactor
-    const { state } = this;
-    console.log('cell: ', x, y, ' was clicked.');
-
-    if (state.gameState === GameState.Pregame && state.selectedShip !== null) { // if placing down ship, then...
-      console.log('placing down ship');
-
-      const { shipStates, selectedShip, orientation } = state;
-
-      const newShipStates = shipStates.mergeIn([selectedShip], { x, y, orientation });
-
-      this.setState({ shipStates: newShipStates });
-      this.setState({ selectedShip: null });
-      this.setState({ currentHoveredCells: null });
-    } else {
-      return false;
-    }
-  }
-
-  _startCellHovered = (x, y) => {
-    const { selectedShip, gameState, orientation } = this.state;
-
-    if (selectedShip && gameState === GameState.Pregame) {
-      const shipTypesList = ShipTypes.toList();
-      const indexOf = shipTypesList.get(selectedShip);
-
-      this.setState({ currentHoveredCells: new ShipState({ type: indexOf, x, y, orientation }).cells });
-    }
-  }
-
-  _endCellHovered = (x, y) => {
-    const { selectedShip, gameState, currentHoveredCells } = this.state;
-    if (selectedShip && gameState === GameState.Pregame && currentHoveredCells) {
-      // this.setState({ currentHoveredCells: null });
-    }
-  }
-
-  get _cellsState() {
-    const { shipStates, currentHoveredCells } = this.state;
-    const filtered = shipStates.filter(x => x.placed);
-
-    const shipCells = filtered.map(ship => {
-      return ship.cells.map(cell => ({
-        x: cell.x,
-        y: cell.y,
-        type: 'SHIP',
-        class: 'Game_board_cell--ship'
-      }));
-    });
-
-    let hoveredCells = null;
-
-    if (!!currentHoveredCells) {
-      console.log(currentHoveredCells);
-      hoveredCells = currentHoveredCells.map(cell => ({
-        x: cell.x,
-        y: cell.y,
-        type: 'HOVER',
-        class: 'Game_board_cell--hover'
-      }));
-
-      const vectorShipCells = shipCells.map(cell => ({ x: cell.x, y: cell.y })).toArray();
-      const vectorHoveredCells = hoveredCells.map(cell => ({ x: cell.x, y: cell.y }));
-
-      if (Utils.intersects(vectorShipCells, vectorHoveredCells)) {
-        hoveredCells = hoveredCells.map(cell => ({
-          x: cell.x,
-          y: cell.y,
-          type: 'SHIP_HOVER',
-          class: 'Game_board_cell--error'
-        }));
-      }
-    }
-
-    let returnVal = shipCells;
-
-    if (!!hoveredCells) {
-      returnVal = shipCells.concat(hoveredCells);
-    }
-    return Utils.shallowFlatten(returnVal);
-  }
+  _updateBoardState = (newBoardState) => {
+    const mergedState = R.assoc('__proto__', Board.prototype, newBoardState)
+    this.setState({ boardState: mergedState })
+  };
 
   render() {
     const { username } = this.state.currentUser;
-    const { gameState, shipStates, selectedShip, orientation } = this.state;
+    const { gameState, boardState, enemyBoardState } = this.state;
     const { lobbyName } = this.state.currentLobby;
 
     return (
@@ -193,31 +95,21 @@ export default class Game extends React.Component {
           <h2 className="Game_vs-tag">{username} vs. {this.enemyName}.</h2>
           <div className="Game_boards">
             <GameBoardTable
-              cellClicked={this._onYourCellClicked}
-              cellsState={this._cellsState}
-              state={gameState}
-              ships={shipStates.filter(x => x.placed)}
-              selectedShip={selectedShip}
-              startCellHovered={this._startCellHovered}
-              endCellHovered={this._endCellHovered}
-              className="Game_board" />
+              updateBoardState={this._updateBoardState}
+              boardState={boardState} />
             <GameBoardTable
-              state={gameState}
-              faded={true}
-              className="Game_board" />
+              boardState={enemyBoardState}
+              faded={true} />
           </div>
         </main>
         <div className="Game_aside">
           <h2 className="Game_subtitle Game_subtitle--aside">{lobbyName}</h2>
-          {{
-            [GameState.Pregame]: (
-              <GameAsidePregame
-                orientation={orientation}
-                selectedShip={selectedShip}
-                changeSelectedShip={this._changeSelectedShip}
-                ships={shipStates} />
-            )
-          }[gameState]
+          {
+            {
+              [GameState.Pregame]: (
+                <GameAside />
+              )
+            }[gameState]
           }
         </div>
       </div>
