@@ -1,11 +1,9 @@
 import React from 'react';
-import * as R from 'ramda';
 
 import GameController from '../lib/game-controller';
 import GameState from '../lib/models/game-state';
-import GameBoardTable from '../components/game-board-table';
+import GameBoard from '../components/game-board';
 import GameAside from '../components/game-aside';
-import { Board } from '../lib/models/board-state';
 
 import '../styles/game.css';
 
@@ -17,9 +15,7 @@ export default class Game extends React.Component {
     currentSpinnerState: '⣾',
     spinnerIntervalId: 0,
     pollGameStateIntervalId: 0,
-    gameState: GameState.SearchingForMatch,
-    boardState: new Board(10, 10),
-    enemyBoardState: new Board(10, 10)
+    gameState: GameState.SearchingForMatch
   }
 
   componentWillMount() {
@@ -78,14 +74,9 @@ export default class Game extends React.Component {
     return !!opponentName ? opponentName : `${currentSpinnerState}`;
   }
 
-  _updateBoardState = (newBoardState) => {
-    const mergedState = R.assoc('__proto__', Board.prototype, newBoardState)
-    this.setState({ boardState: mergedState })
-  };
-
   render() {
     const { username } = this.state.currentUser;
-    const { gameState, boardState, enemyBoardState } = this.state;
+    const { gameState } = this.state;
     const { lobbyName } = this.state.currentLobby;
 
     return (
@@ -94,12 +85,8 @@ export default class Game extends React.Component {
           <h1 className="Game_title">battleships.</h1>
           <h2 className="Game_vs-tag">{username} vs. {this.enemyName}.</h2>
           <div className="Game_boards">
-            <GameBoardTable
-              updateBoardState={this._updateBoardState}
-              boardState={boardState} />
-            <GameBoardTable
-              boardState={enemyBoardState}
-              faded={true} />
+            <GameBoard />
+            <GameBoard faded={true} />
           </div>
         </main>
         <div className="Game_aside">

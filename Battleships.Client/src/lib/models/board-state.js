@@ -1,7 +1,4 @@
-import React from 'react';
 import * as R from 'ramda';
-
-import GameBoardCell from '../../components/game-board-cell';
 
 // Todo later
 function deepFreeze(obj) {
@@ -34,8 +31,7 @@ export class Cell {
      * @memberof Cell
     * */
     setMetadata(metadata) {
-        const lens = R.lensProp('metadata');
-        return R.compose(R.assoc('__proto__', Cell.prototype) ,R.set(lens, metadata))(this);
+        return new Cell(this.x, this.y, metadata);
     }
 }
 
@@ -61,43 +57,25 @@ export const CellMetadatas = {
 
 export class Board {
     constructor(width, height) {
-        const rows = R.range(1)(width + 1);
-        const columns = R.range(1)(height + 1);
+        const rows = R.range(1, width + 1);
+        const columns = R.range(1, height + 1);
 
         this.cellSet = R.map(
             row => R.map(
                 column => new Cell(column, row, CellMetadatas.WATER)
             )(columns)
         )(rows);
-
-        deepFreeze(this);
     }
 
     setCellMetadata(x, y, metadata) {
         const cell = R.lensPath(['cellSet', y - 1, x - 1]);
         const cellView = R.view(cell, this);
 
-        return R.set(cell, cellView.setMetadata(metadata), this);
+        this.cellSet[y - 1][x - 1] = cellView.setMetadata(metadata);
     }
 
-    getCellMetadata(x, y) {
-        const cell = R.lensPath(['cellSet', y - 1, x - 1, 'metadata']);
-        return R.view(cell, this);        
-    }
-
-    toJSX(onHover = () => { }, onHoverEnd = () => { }, onClick = () => { }) {
-        const columnsByRow = R.map(cell => <GameBoardCell
-            onHover={() => onHover(cell.x, cell.y)}
-            onHoverEnd={() => onHoverEnd(cell.x, cell.y)}
-            onClick={() => onClick(cell.x, cell.y)}
-            metadata={cell.metadata}
-            key={(10 * cell.y) + cell.x - 10} />);
-
-        const idxMap = R.addIndex(R.map);
-        const rows = idxMap((row, idx) => <tr key={idx + 1}>{columnsByRow(row)}</tr>);
-
-        return rows(this.cellSet);
+    getCell(x, y) {
+        const cell = R.lensPath(['cellSet', y - 1, x - 1]);
+        return R.view(cell, this);
     }
 }
-
-window.Board = new Board(10, 10);   
