@@ -1,5 +1,5 @@
 import React from 'react';
-import { clone, lensProp, set, map, addIndex, compose, values, find, propEq } from 'ramda';
+import * as R from 'ramda';
 
 import ShipLabel from './ship-label';
 import GameState from '../lib/models/game-state';
@@ -8,38 +8,43 @@ import { ShipMetadatas } from '../lib/models/ship-state'
 class GameAside extends React.Component {
 
   state = {
-    ships: clone(ShipMetadatas)
+    ships: R.clone(ShipMetadatas)
   }
 
   _renderPregame = () => {
-    const { ships, selectedShip } = this.state;
+    const { ships } = this.state;
+    const { selectedShip } = this.props;
 
-    const indexedMap = addIndex(map);
+    const indexedMap = R.addIndex(R.map);
 
     const labelMap = indexedMap((type, idx) => <ShipLabel
       key={idx}
-      type={type.type}
+      type={type[0]}
       onClick={this._shipLabelClicked}
-      selected={[type] === selectedShip}
-      size={type.size}
-      name={type.type} />);
+      selected={type[0] === selectedShip}
+      size={type[1].size}
+      name={type[1].type} />);
 
-    return compose(
+    return R.compose(
       labelMap,
-      values
+      R.toPairs
     )(ships);
   }
 
-  _shipLabelClicked = type => {
-    const { ships } = this.state;
-    
-    const ship = find(propEq('type', type))(ships);
-    const shipLens = lensProp();
+  _shipLabelClicked = type => this.props.changeSelectedShip(type);
 
-    this.setState({
-      ships: set(shipLens, ship.toggleSelected(), ships),
-      selectedShip: type
-    });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.placedShips !== this.props.placedShips) {
+      const { ships } = this.state;
+      const { placedShips } = nextProps;
+
+      const withoutIntersection = R.without(placedShips, ships);
+
+      console.log(withoutIntersection);
+      this.setState({
+        ships: withoutIntersection
+      });
+    }
   }
 
   render() {

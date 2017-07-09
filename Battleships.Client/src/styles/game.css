@@ -53,7 +53,7 @@
     }
 
     .Game_board_cell--error {
-        background-color: rgba(255, 0, 0, 0.8);
+        background-color: rgba(255, 0, 0, 0.5);
     }
 
     .Game_board_cell--ship {
@@ -76,6 +76,10 @@
     .Game_list {
         list-style: none;
         padding-left: 0;
+    }
+
+    .Game_list_item {
+        user-select: none;
     }
 
     .Game_list_item_hoverable:hover {

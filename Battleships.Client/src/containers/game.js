@@ -1,9 +1,11 @@
 import React from 'react';
+import * as R from 'ramda';
 
 import GameController from '../lib/game-controller';
 import GameState from '../lib/models/game-state';
 import GameBoard from '../components/game-board';
 import GameAside from '../components/game-aside';
+import { ShipMetadatas } from '../lib/models/ship-state';
 
 import '../styles/game.css';
 
@@ -15,7 +17,9 @@ export default class Game extends React.Component {
     currentSpinnerState: '⣾',
     spinnerIntervalId: 0,
     pollGameStateIntervalId: 0,
-    gameState: GameState.SearchingForMatch
+    gameState: GameState.SearchingForMatch,
+    selectedShip: null,
+    placedShips: []
   }
 
   componentWillMount() {
@@ -74,9 +78,13 @@ export default class Game extends React.Component {
     return !!opponentName ? opponentName : `${currentSpinnerState}`;
   }
 
+  _changeSelectedShip = selectedShip => {
+    this.setState({ selectedShip });
+  }
+
   render() {
     const { username } = this.state.currentUser;
-    const { gameState } = this.state;
+    const { gameState, selectedShip, placedShips } = this.state;
     const { lobbyName } = this.state.currentLobby;
 
     return (
@@ -85,14 +93,18 @@ export default class Game extends React.Component {
           <h1 className="Game_title">battleships.</h1>
           <h2 className="Game_vs-tag">{username} vs. {this.enemyName}.</h2>
           <div className="Game_boards">
-            <GameBoard gameState={gameState} />
+            <GameBoard selectedShip={selectedShip} gameState={gameState} />
             <GameBoard gameState={gameState} faded={true} />
           </div>
         </main>
-        <div className="Game_aside">
+        <aside className="Game_aside">
           <h2 className="Game_subtitle Game_subtitle--aside">{lobbyName}</h2>
-          <GameAside gameState={gameState} />
-        </div>
+          <GameAside
+            placedShips={placedShips}
+            selectedShip={selectedShip}
+            changeSelectedShip={this._changeSelectedShip}
+            gameState={gameState} />
+        </aside>
       </div>
     );
   }
