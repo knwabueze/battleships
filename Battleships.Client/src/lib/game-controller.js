@@ -1,4 +1,4 @@
-const gameController = {
+class GameController {
     /**
      * Returns a GamePollPatch object that signifies if a match has been found.
      * 
@@ -6,7 +6,7 @@ const gameController = {
      * @param {int} userId, The id of the currentUser.
      * @returns {Promise} This promise returns a GamePollPatch object. 
      */
-    pollLobby: function (lobbyId, userId) {
+    static pollLobby(lobbyId, userId) {
         return new Promise(async (resolve, reject) => {
             const options = {
                 headers: {
@@ -27,6 +27,10 @@ const gameController = {
             }            
         });
     }
+
+    static placeShip(userId, x, y, ori, shipType, gameId) {
+
+    } 
 };
 
-export default gameController;
+export default GameController;

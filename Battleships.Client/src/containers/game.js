@@ -1,5 +1,4 @@
 import React from 'react';
-import * as R from 'ramda';
 
 import GameController from '../lib/game-controller';
 import GameState from '../lib/models/game-state';
@@ -82,6 +81,14 @@ export default class Game extends React.Component {
     this.setState({ selectedShip });
   }
 
+  _placeShip = shipType => {
+    const { placedShips } = this.state;
+    this.setState({
+      placedShips: placedShips.concat([ShipMetadatas[shipType]]),
+      selectedShip: null
+    });
+  }
+
   render() {
     const { username } = this.state.currentUser;
     const { gameState, selectedShip, placedShips } = this.state;
@@ -93,7 +100,7 @@ export default class Game extends React.Component {
           <h1 className="Game_title">battleships.</h1>
           <h2 className="Game_vs-tag">{username} vs. {this.enemyName}.</h2>
           <div className="Game_boards">
-            <GameBoard selectedShip={selectedShip} gameState={gameState} />
+            <GameBoard placeShip={this._placeShip} selectedShip={selectedShip} gameState={gameState} />
             <GameBoard gameState={gameState} faded={true} />
           </div>
         </main>

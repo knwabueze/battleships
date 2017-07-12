@@ -17,26 +17,47 @@ export default class GameBoard extends React.Component {
 
   _onCellHovered = (x, y) => {
     const { boardState } = this.state;
-    const { selectedShip } = this.props;
+    const { selectedShip, gameState } = this.props;
 
-    if (Board.getCell(boardState, x, y).metadata !== CellMetadatas.HOVER && !!selectedShip) {
-      const { size } = ShipMetadatas[selectedShip];
+    if (gameState === GameState.Pregame) {
+      const cellState = Board.getCell(boardState, x, y);
+      if (cellState.metadata !== CellMetadatas.HOVER && !!selectedShip) {
 
-      if (Board.violatesShipPlacement(boardState, x, y, 'N', size)) {
-        this.setState({
-          boardState: Board.projectShip(boardState, x, y, 'N', size, CellMetadatas.ERROR)
-        });
-      } else {
-        this.setState({
-          boardState: Board.projectShip(boardState, x, y, 'N', size, CellMetadatas.HOVER)
-        });
+        const { size } = ShipMetadatas[selectedShip];
+
+        if (Board.violatesShipProjectionPlacement(boardState, x, y, 'N', size)) {
+          if (Board.violatesBoundsProjectionPlacement(boardState, x, y, 'N', size)) {
+            this.setState({
+              boardState: Board.projectShip(boardState, x, y, 'N', size, CellMetadatas.ERROR)
+            });
+          }
+        } else {
+          this.setState({
+            boardState: Board.projectShip(boardState, x, y, 'N', size, CellMetadatas.HOVER)
+          });
+        }
       }
     }
   }
 
-  _onCellClicked = (x, y) => {
+  _onCellHoveredEnd = (x, y) => {
     const { boardState } = this.state;
     const { selectedShip, gameState } = this.props;
+
+    if (gameState === GameState.Pregame && !!selectedShip) {
+      this.setState({
+        boardState: Board.hoverEnd(boardState)
+      });
+    }
+  }
+
+  _onCellClicked = (x, y) => {
+    this._placeShip(x, y);
+  }
+
+  _placeShip(x, y) {
+    const { boardState } = this.state;
+    const { selectedShip, gameState, placeShip } = this.props;
 
     if (!!selectedShip && gameState === GameState.Pregame) {
       if (Board.getShipIsProjected(boardState)) {
@@ -45,6 +66,8 @@ export default class GameBoard extends React.Component {
         this.setState({
           boardState: Board.placeShip(boardState, x, y, 'N', size)
         });
+
+        placeShip(selectedShip);
       }
     }
   }
@@ -65,17 +88,6 @@ export default class GameBoard extends React.Component {
     const mapRows = indexedMap((row, idx) => <tr key={idx}>{mapCells(row)}</tr>);
 
     return mapRows(data);
-  }
-
-  _onCellHoveredEnd = (x, y) => {
-    const { boardState } = this.state;
-    const { selectedShip } = this.props;
-
-    if (Board.getCell(boardState, x, y).metadata !== CellMetadatas.WATER && !!selectedShip) {
-      this.setState({
-        boardState: Board.projectShip(boardState, x, y, 'N', ShipMetadatas[selectedShip].size, CellMetadatas.WATER)
-      });
-    }
   }
 
   render() {

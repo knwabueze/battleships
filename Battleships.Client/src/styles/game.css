@@ -58,6 +58,7 @@
 
     .Game_board_cell--ship {
         background-color: silver;
+        pointer-events: none;
     }
 /* END Boards Section */
 
