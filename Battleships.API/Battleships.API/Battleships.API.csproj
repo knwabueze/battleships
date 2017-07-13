@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="Models\GameInitializationPatch.cs" />
     <Compile Include="Models\GameUpdatePatch.cs" />
+    <Compile Include="Models\GetBoardPatch.cs" />
     <Compile Include="Models\LobbyGeneralInfo.cs" />
     <Compile Include="Models\LobbyPostInfo.cs" />
     <Compile Include="Models\LobbyCreationInfo.cs" />

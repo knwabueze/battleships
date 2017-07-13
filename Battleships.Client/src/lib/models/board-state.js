@@ -73,7 +73,6 @@ export class Board {
         : cell;
 
     const cellMap = R.compose(
-      R.tap(console.log),
       chunk(BoardState.height),
       R.map(mapHoverOrError),
       R.flatten
@@ -83,6 +82,16 @@ export class Board {
     newBoardState.cellSet = cellMap(BoardState.cellSet);
 
     return newBoardState;
+  }
+
+  static fromJson(json) {
+    const board = new Board(json.width, json.height);
+    
+    /** 
+     * Transform 
+     * 
+     * 
+    */
   }
 
   static violatesBoundsPlacement(BoardState, x, y) {

@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Battleships.API.Models;
 using System.Web.Http.Cors;
+using BattleshipAPI.Models;
 
 namespace Battleships.API.Controllers
 {
@@ -21,6 +22,52 @@ namespace Battleships.API.Controllers
     {
         private static readonly string connectionString =
                ConfigurationManager.ConnectionStrings["Local"].ConnectionString;
+
+        [HttpGet]
+        [Route("getboardstate/{userId}/{gameId}")]
+        public GetBoardPatch GetBoardState(int userId, int gameId)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("usp_GetBoardState", connection))
+            {
+                var dataset = new DataSet();
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@gameid", gameId));
+                command.Parameters.Add(new SqlParameter("@userid", userId));
+
+                var dataAdapter = new SqlDataAdapter(command);
+
+                connection.Open();
+                dataAdapter.Fill(dataset);
+                connection.Close();
+
+                var model = new GetBoardPatch(10, 10);
+
+                var shipsTable = dataset.Tables[0];
+                var hitCellsTable = dataset.Tables[1];
+
+                if (shipsTable.Rows.Count == 0)
+                {
+                    return null;
+                }
+
+                foreach (DataRow row in shipsTable.Rows)
+                {
+                    int x = Convert.ToInt32(row["X"]) - 1;
+                    int y = Convert.ToInt32(row["Y"]) - 1;
+                    string shipType = row["Type"].ToString();
+
+                    model.CellSet[y, x].Meta.Type = GetBoardPatch.MetadataLookup[1];
+                    model.CellSet[y, x].Meta.Descriptor = new
+                    {
+                        type = shipType
+                    };
+                }
+
+                return model;
+            }
+        }
 
         [HttpGet]
         [Route("ready")]

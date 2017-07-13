@@ -18,6 +18,7 @@ export default class Game extends React.Component {
     pollGameStateIntervalId: 0,
     gameState: GameState.SearchingForMatch,
     selectedShip: null,
+    gameId: null,
     placedShips: []
   }
 
@@ -38,7 +39,7 @@ export default class Game extends React.Component {
 
   componentDidMount() {
     const { currentLobby, currentUser } = this.state;
-    const pollGameStateId = setInterval(async () => {
+    const pollGameStateIntervalId = setInterval(async () => {
       const gamePollPatch = await GameController.pollLobby(currentLobby.lobbyId, currentUser.id);
 
       if (gamePollPatch.statusCode === 0) {
@@ -46,16 +47,20 @@ export default class Game extends React.Component {
         clearInterval(pollGameStateId);
         clearInterval(spinnerIntervalId);
 
-        this.setState({ opponentName: gamePollPatch.opponentName });
-        this.setState({ pollGameStateIntervalId: null });
-        this.setState({ spinnerIntervalId: null });
-        this.setState({ gameState: GameState.Pregame });
+        this.setState({
+          opponentName: gamePollPatch.opponentName,
+          pollGameStateIntervalId: null,
+          spinnerIntervalId: null,
+          gameState: GameState.Pregame,
+          gameId: gamePollPatch.gameId
+        });
+
         document.title = `Battleships | ${currentUser.username} vs. ${gamePollPatch.opponentName}`;
       }
     }, 500);
 
     this.setState({
-      pollGameStateId
+      pollGameStateIntervalId
     });
   }
 
@@ -81,11 +86,24 @@ export default class Game extends React.Component {
     this.setState({ selectedShip });
   }
 
-  _placeShip = shipType => {
-    const { placedShips } = this.state;
-    this.setState({
-      placedShips: placedShips.concat([ShipMetadatas[shipType]]),
-      selectedShip: null
+  _placeShip = (shipType, x, y, ori) => { // HERE DO AJAX CALL
+    return new Promise(async (resolve, reject) => {
+      const { placedShips } = this.state;
+
+      try {
+        const { currentUser: { userId }, gameId } = this.state;
+
+        const shipPlacementPatch = GameController.placeShip(userId, x, y, ori, ShipMetadatas[shipType].type, gameId);
+
+        this.setState({
+          placedShips: placedShips.concat([ShipMetadatas[shipType]]),
+          selectedShip: null
+        });
+
+        resolve();
+      } catch (ex) {
+        reject(ex);
+      }
     });
   }
 

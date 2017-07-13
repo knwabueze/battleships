@@ -55,19 +55,24 @@ export default class GameBoard extends React.Component {
     this._placeShip(x, y);
   }
 
-  _placeShip(x, y) {
+  async _placeShip(x, y) {
     const { boardState } = this.state;
     const { selectedShip, gameState, placeShip } = this.props;
 
     if (!!selectedShip && gameState === GameState.Pregame) {
       if (Board.getShipIsProjected(boardState)) {
-        const { size } = ShipMetadatas[selectedShip];
 
-        this.setState({
-          boardState: Board.placeShip(boardState, x, y, 'N', size)
-        });
+        try {
+          await placeShip(selectedShip, x, y, 'N');
+          const { size } = ShipMetadatas[selectedShip];
 
-        placeShip(selectedShip);
+          this.setState({
+            boardState: Board.placeShip(boardState, x, y, 'N', size)
+          });
+        } catch (ex) {
+          console.error(ex);
+        }
+
       }
     }
   }
