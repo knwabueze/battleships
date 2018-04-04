@@ -1,0 +1,42 @@
+.Home_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 200px;
+    padding-right: 200px;
+    width: 100vw;
+    box-sizing: border-box;
+}
+
+.Home_title {
+    text-align: center;
+    font-family: Roboto, 'sans-serif';
+}
+
+.Home_textbox {
+    width: 20em;
+    min-width: 200px;
+}
+
+.Home_buttons {
+    margin-top: 1em;
+    display: block;
+    width: 20em;
+    min-width: 200px;
+    box-sizing: border-box;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.Home_button {
+    border-radius: 70px;
+    background-color: transparent;
+    border: solid 1px black;
+    float: right;
+    padding-top: 5px;
+}
+
+.Home_button.Home_button--first-child {
+    float: left;
+}
